@@ -79,7 +79,7 @@ class Post(models.Model, LikeDislike):
     rate = models.IntegerField(null=False, default=0)
 
     def preview(self):
-        return f'{self.title}\n{self.content[:125]}'
+        return f'{self.content[:125]}...'
 
     def __str__(self):
         return f'Автор: {self.author.user.username} | Заголовок: {self.title} | Категория: {self.category} | Тип: {self.get_type_display()}'

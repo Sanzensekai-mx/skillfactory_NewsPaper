@@ -65,7 +65,18 @@ Author.update_rating('Smirnov')
 
 9. Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
 
-
+Author.objects.all().order_by('-rate').values('user__username', 'rate')[0]
 
 10. Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+
+post = Post.objects.all().order_by('-rate').values('create_time', 'author__user__username', 'rate', 'title', 'content')[0]
+post['create_time'] = str(post['create_time'])
+post['content'] = post['content'][:125]
+post
+
+
 11. Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+
+post = Post.objects.all().order_by('-rate')[0]
+Comment.objects.filter(post=post).values('create_time', 'user__username', 'rate', 'comment')
+
