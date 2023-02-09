@@ -39,9 +39,33 @@ Comment.objects.create(post=Post.objects.get(id=4), user=User.objects.get(userna
 
 7. Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
 
+post1 = Post.objects.get(id=1)
+post2 = Post.objects.get(id=2)
+post3 = Post.objects.get(id=4)
+post1.like()
+post2.like()
+post3.like()
+post1.save()
+post2.save()
+post3.save()
 
+comment1 = Comment.objects.get(id=1)
+comment1.like()
+comment1.save()
+
+for comment in Comment.objects.all().values('id'):
+    comment_to_save = Comment.objects.get(id=comment['id'])
+    comment_to_save.like()
+    comment_to_save.save()
 
 8. Обновить рейтинги пользователей.
+
+Author.update_rating('Ivanov')
+Author.update_rating('Smirnov')
+
 9. Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+
+
+
 10. Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
 11. Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.

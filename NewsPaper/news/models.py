@@ -5,31 +5,50 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class CommonLike:
+class LikeDislike:
     rate = 0
+
+    def save(self):
+        pass
 
     def like(self):
         self.rate += 1
+        self.save()
 
     def dislike(self):
         self.rate -= 1
+        self.save()
 
 
 class Author(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rate = models.IntegerField(null=False, default=0)
 
-    def update_rating(self):
-        all_author_articles = Post.objects.filter(author__user=self.user).values('author__user__username', 'title',
-                                                                                 'rate')
-        all_author_comments = Comment.objects.filter(user=self.user).values('post__title', 'user__username', 'comment',
+    @staticmethod
+    def update_rating(username):
+        user = User.objects.get(username=username)
+        author = Author.objects.get(user=user)
+        result_rate = 0
+
+        all_author_articles = Post.objects.filter(author__user=user).values('author__user__username', 'title',
                                                                             'rate')
-        all_comments_under_author_posts = Comment.objects.filter(post__author__user=self.user).values('post__title',
-                                                                                                      'user__username',
-                                                                                                      'comment', 'rate')
-        print(all_author_articles)
-        print(all_author_comments)
-        print(all_comments_under_author_posts)
+        all_author_comments = Comment.objects.filter(user=user).values('post__title', 'user__username', 'comment',
+                                                                       'rate')
+        all_comments_under_author_posts = Comment.objects.filter(post__author__user=user).values('post__title',
+                                                                                                 'user__username',
+                                                                                                 'comment', 'rate')
+
+        for article in all_author_articles:
+            result_rate += article['rate'] * 3
+
+        for author_comment in all_author_comments:
+            result_rate += author_comment['rate']
+
+        for comments_author_post in all_comments_under_author_posts:
+            result_rate += comments_author_post['rate']
+
+        author.rate = result_rate
+        author.save()
 
     def __str__(self):
         return f'{self.user.username}'
@@ -42,7 +61,7 @@ class Category(models.Model):
         return self.category
 
 
-class Post(models.Model, CommonLike):
+class Post(models.Model, LikeDislike):
     article = 'AR'
     new = 'NE'
 
@@ -71,7 +90,7 @@ class PostCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
-class Comment(models.Model, CommonLike):
+class Comment(models.Model, LikeDislike):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.CharField(max_length=280)
