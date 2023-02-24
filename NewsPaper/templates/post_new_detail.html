@@ -1,18 +1,20 @@
 {% extends 'default.html' %}
 
+{% load custom_filters %}
+
 {% block title %}
-{{  post_new.title }}
+{{  post_new.title|censor:'*' }}
 {% endblock title %}
 
 {% block content %}
 <main>
     <div class='new-content'>
             <div class='post-header'>
-                <h2 class='post-title'>{{ post_new.title }}</h2>
-                <span class='post-create-time'>{{ post_new.create_time|date:'d.m.Y' }}</span>
+                <h2 class='post-title'>{{ post_new.title|censor:'*' }}</h2>
+                <span class='post-create-time'>{{ post_new.create_time|date:'d.m.Y H:i' }}</span>
             </div>
         <hr>
-        <p class='post-content'>{{ post_new.content }}</p>
+        <p class='post-content'>{{ post_new.content|censor:'*' }}</p>
     </div>
 </main>
 

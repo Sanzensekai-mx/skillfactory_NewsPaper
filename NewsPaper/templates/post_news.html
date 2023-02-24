@@ -1,5 +1,7 @@
 {% extends 'default.html' %}
 
+{% load custom_filters %}
+
 {% block title %}
 News
 {% endblock title %}
@@ -12,8 +14,8 @@ News
         {% for post in post_news %}
         <div class="post-preview-container">
             <div class="title-container">
-                <a href='/news/{{ post.id }}'><h5 class='new-title'>{{ post.title }}</h5></a>
-                <p class="post-desc">{{ post.content|truncatewords:20 }}</p>
+                <a href='/news/{{ post.id }}'><h5 class='new-title'>{{ post.title|censor:'*' }}</h5></a>
+                <p class="post-desc">{{ post.content|truncatewords:20|censor:'*' }}</p>
             </div>
         <span class='new-date'>{{ post.create_time|date:'d.m.Y' }}</span>
             
