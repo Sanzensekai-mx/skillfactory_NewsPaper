@@ -1,0 +1,50 @@
+.post-preview-container {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+}
+
+.post-desc {
+    text-align: left;
+    max-width: 1000px;
+}
+
+.news-block {
+    max-width: 1300px;
+}
+
+.new-title {
+    text-align: left;
+}
+
+.new-date {
+    margin-left: 30px;
+}
+
+.title-container > a {
+    text-decoration: none;
+}
+
+.post-title {
+    text-align: left;
+    max-width: 600px;
+}
+
+.post-create-time {
+    color: gray;
+    
+}
+
+.new-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-content {
+    text-align: left;
+    font-size: 20px;
+}
+
+.post-header {
+    text-align: left;
+}

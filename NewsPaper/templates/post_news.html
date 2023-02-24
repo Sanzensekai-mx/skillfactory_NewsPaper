@@ -5,7 +5,23 @@ News
 {% endblock title %}
 
 {% block content %}
-
-{{ post_news }}
+{% if post_news %}
+    <h4>Колличество новостей: {{ post_news|length }}</h4>
+    <hr>
+    <div class='news-block'>
+        {% for post in post_news %}
+        <div class="post-preview-container">
+            <div class="title-container">
+                <a href='/news/{{ post.id }}'><h5 class='new-title'>{{ post.title }}</h5></a>
+                <p class="post-desc">{{ post.content|truncatewords:20 }}</p>
+            </div>
+        <span class='new-date'>{{ post.create_time|date:'d.m.Y' }}</span>
+            
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <h2>Новости отсутствуют</h2>
+{% endif %}
 
 {% endblock content %}

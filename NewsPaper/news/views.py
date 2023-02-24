@@ -9,6 +9,7 @@ class ListPosts(ListView):
     model = Post
     template_name = 'post_news.html'
     context_object_name = 'post_news'
+    queryset = Post.objects.order_by('-create_time')
 
 
 class DetailPosts(DetailView):
