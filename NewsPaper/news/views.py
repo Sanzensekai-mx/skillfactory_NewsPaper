@@ -10,6 +10,7 @@ class ListPosts(ListView):
     template_name = 'post_news.html'
     context_object_name = 'post_news'
     queryset = Post.objects.order_by('-create_time')
+    paginate_by = 10
 
 
 class DetailPosts(DetailView):
