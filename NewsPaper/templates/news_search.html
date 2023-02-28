@@ -1,0 +1,55 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Search News
+{% endblock title %}
+
+
+
+
+{% block content %}
+    <form method="GET">
+        {{ filter.form.as_p }}
+        <input type="submit" value="Искать">
+    </form>
+
+    <hr>
+    <div class='news-block'>
+        {% for post in filtered_posts %}
+        <div class="post-preview-container">
+            <div class="title-container">
+                <a href='/news/{{ post.id }}'><h5 class='new-title'>{{ post.title|censor:'*' }}</h5></a>
+                <p class="post-desc">{{ post.content|truncatewords:20|censor:'*' }}</p>
+            </div>
+        <span class='new-date'>{{ post.create_time|date:'d.m.Y' }}</span>
+
+        </div>
+        {% endfor %}
+
+<!--        {{ filtered_posts|length }}-->
+<!--        {{ filtered_posts.has_other_pages }}-->
+        {% if filtered_posts.has_other_pages  %}
+            {% if filtered_posts.has_previous %}
+                <a href="?page=1">First</a>
+                <a href="?page={{ filtered_posts.previous_page_number }}"><<<</a>
+            {% endif %}
+            {% for num in filtered_posts.paginator.page_range %}
+                {% if filtered_posts.number == num %}
+                    <a>{{ num }}</a>
+                {% elif num > filtered_posts.number|add:'-3' and num < filtered_posts.number|add:'3' %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if filtered_posts.has_next %}
+                <a href="?page={{ filtered_posts.next_page_number }}">>>></a>
+                <a href="?page={{ filtered_posts.paginator.num_pages }}">Last</a>
+            {% endif %}
+        {% endif %}
+
+    </div>
+
+{% endblock content %}
+
