@@ -11,7 +11,14 @@
     <div class='new-content'>
             <div class='post-header'>
                 <h2 class='post-title'>{{ post_new.title|censor:'*' }}</h2>
+                <p>
+                    Категории:
+                    {% for category in categories %}
+                        <span>{{ category }}</span>
+                    {% endfor %}
+                </p>
                 <span class='post-create-time'>{{ post_new.create_time|date:'d.m.Y H:i' }}</span>
+                <p>{{ post_new.author.user.last_name }} {{ post_new.author.user.first_name }}</p>
             </div>
         <hr>
         <p class='post-content'>{{ post_new.content|censor:'*' }}</p>

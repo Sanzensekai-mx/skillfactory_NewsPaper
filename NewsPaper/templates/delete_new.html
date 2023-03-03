@@ -1,0 +1,21 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Delete Post
+{% endblock %}
+
+{% block content %}
+<h2>Вы действительно хотите удалить данную новость?</h2>
+
+{{ post_to_del.author }}
+{{ post_to_del.title }}
+{{ post_to_del.create_time }}
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Удалить">
+</form>
+
+{% endblock %}

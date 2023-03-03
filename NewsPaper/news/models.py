@@ -78,6 +78,10 @@ class Post(models.Model, LikeDislike):
     content = models.TextField()
     rate = models.IntegerField(null=False, default=0)
 
+    def get_absolute_url(self):
+        return f'/news/{self.id}'  # добавим абсолютный путь, чтобы после создания
+        # нас перебрасывало на страницу с товаром
+
     def preview(self):
         return f'{self.content[:125]}...'
 
