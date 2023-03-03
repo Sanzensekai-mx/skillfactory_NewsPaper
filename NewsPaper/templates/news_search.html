@@ -1,5 +1,6 @@
 {% extends 'default.html' %}
 
+{% load spurl %}
 {% load custom_filters %}
 
 {% block title %}
@@ -32,20 +33,20 @@ Search News
 <!--        {{ filtered_posts.has_other_pages }}-->
         {% if filtered_posts.has_other_pages  %}
             {% if filtered_posts.has_previous %}
-                <a href="?page=1">First</a>
-                <a href="?page={{ filtered_posts.previous_page_number }}"><<<</a>
+                <a href="{% spurl query=request.GET set_query='page=1' %}">First</a>
+                <a href="{% spurl query=request.GET set_query='page={{ filtered_posts.previous_page_number }}' %}"><<<</a>
             {% endif %}
             {% for num in filtered_posts.paginator.page_range %}
                 {% if filtered_posts.number == num %}
                     <a>{{ num }}</a>
                 {% elif num > filtered_posts.number|add:'-3' and num < filtered_posts.number|add:'3' %}
-                    <a href="?page={{ num }}">{{ num }}</a>
+                    <a href="{% spurl query=request.GET set_query='page={{ num }}' %}">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if filtered_posts.has_next %}
-                <a href="?page={{ filtered_posts.next_page_number }}">>>></a>
-                <a href="?page={{ filtered_posts.paginator.num_pages }}">Last</a>
+                <a href="{% spurl query=request.GET set_query='page={{ filtered_posts.next_page_number }}' %}">>>></a>
+                <a href="{% spurl query=request.GET set_query='page={{ filtered_posts.paginator.num_pages }}' %}">Last</a>
             {% endif %}
         {% endif %}
 

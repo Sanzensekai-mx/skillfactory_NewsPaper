@@ -57,7 +57,10 @@ def post_search(request):
     post_list = posts_filter.qs
 
     paginator = Paginator(post_list, 10)
+    # print(request.GET)
+    # page_get = request.GET.dict()
     page = request.GET.get('page', 1)
+    print(page)
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -67,6 +70,6 @@ def post_search(request):
     context = {
         'paginator': paginator,
         'filter': posts_filter,
-        'filtered_posts': posts
+        'filtered_posts': posts,
     }
     return render(request, 'news_search.html', context)
