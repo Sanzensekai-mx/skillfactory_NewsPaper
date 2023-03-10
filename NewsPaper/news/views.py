@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
@@ -91,7 +92,8 @@ def post_search(request):
     return render(request, 'news_search.html', context)
 
 
-class CreatePostView(LoginRequiredMixin, CreateView):
+class CreatePostView(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post')
     # model = Post
     template_name = 'add_new.html'
     form_class = PostForm
@@ -122,8 +124,8 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class UpdatePostView(LoginRequiredMixin, UpdateView):
-    # model =
+class UpdatePostView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     template_name = 'add_new.html'
     form_class = PostForm
 
@@ -132,7 +134,8 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
         return Post.objects.get(pk=id)
 
 
-class DeletePostView(LoginRequiredMixin, DeleteView):
+class DeletePostView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post')
     template_name = 'delete_new.html'
     context_object_name = 'post_to_del'
     queryset = Post.objects.all()

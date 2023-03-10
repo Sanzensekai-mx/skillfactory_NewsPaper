@@ -28,7 +28,14 @@
                         <li class="nav-item"><a class="nav-link" aria-current="page" href="/news/be_author">Стать Автором</a></li>
                         <li class="nav-item"><a class="nav-link" aria-current="page" href="/about">О нас</a></li>
                         <li class="nav-item"><a class="nav-link" href="/contacts">Контакты</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/policy">Политика конфиденциальности</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">|</a></li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-link">Привет, {{ request.user.username }}</li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Войти</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Регистрация</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
