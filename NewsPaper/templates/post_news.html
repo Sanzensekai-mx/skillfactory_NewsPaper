@@ -9,14 +9,19 @@ News
 {% block content %}
 {% if post_news %}
     <h4>Количество новостей: {{ post_news|length }}</h4>
+    {% if not is_not_author %}
+        <a class="nav-link" aria-current="page" href="/news/add">Add Post</a>
+    {% endif %}
     <hr>
     <div class='news-block'>
         {% for post in post_news %}
         <div class="post-preview-container">
             <div class="title-container">
                 <a href='/news/{{ post.id }}'><h5 class='new-title'>{{ post.title|censor:'*' }}</h5></a>
-                <a href="{% url 'update_post' post.id %}">Редактировать</a>
-                <a href="{% url 'delete_post' post.id %}">Удалить</a>
+                {% if not is_not_author %}
+                    <a href="{% url 'update_post' post.id %}">Редактировать</a>
+                    <a href="{% url 'delete_post' post.id %}">Удалить</a>
+                {% endif %}
                 <p class="post-desc">{{ post.content|truncatewords:20|censor:'*' }}</p>
             </div>
         <span class='new-date'>{{ post.create_time|date:'d.m.Y' }}</span>

@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-# Create your views here.
 from django.views import View
+from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .models import Post, Author, PostCategory, Category
@@ -17,6 +18,11 @@ class ListPosts(ListView):
     context_object_name = 'post_news'
     queryset = Post.objects.order_by('-create_time')
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
 
 
 class DetailPosts(DetailView):
@@ -93,6 +99,13 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         'author': None
     }
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
+
+
+
     # def post(self, request, *args, **kwargs):
     #     context = super().post(request, **kwargs)
     #     author = Author.objects.get(user=request.user)
@@ -124,3 +137,12 @@ class DeletePostView(LoginRequiredMixin, DeleteView):
     context_object_name = 'post_to_del'
     queryset = Post.objects.all()
     success_url = '/news/'
+
+# TODO добавлять пользователя в объекты модели Author
+@login_required
+def become_author(request):
+    user = request.user
+    author_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        author_group.user_set.add(user)
+    return redirect('/news/')

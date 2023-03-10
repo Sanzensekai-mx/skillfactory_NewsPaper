@@ -98,6 +98,8 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+ACCOUNT_FORMS = {'signup': 'accounts.forms.CommonSignupForm'}
+
 # ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 # LOGIN_REDIRECT_URL = '/news/'
 
@@ -131,8 +133,8 @@ USE_I18N = True
 USE_TZ = True
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = 'news/'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'news/'
+LOGIN_REDIRECT_URL = '/news/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/news/'
 
 
 # Static files (CSS, JavaScript, Images)
