@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
 from django.views import View
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .models import Post, Author, PostCategory, Category
 from .filters import PostFilter
-from .forms import PostForm
+from .forms import PostForm, UserUpdateForm
 
 
 class ListPosts(ListView):
@@ -154,6 +154,15 @@ class DeletePostView(PermissionRequiredMixin, DeleteView):
         if not author == item.author and not author.user.is_superuser:
             return HttpResponseForbidden(f'Нет доступа для удаления постов автора {item.author.user.username}')
         return get
+
+
+class UpdateUserProfileView(UpdateView, LoginRequiredMixin):
+    template_name = 'update_user_profile.html'
+    form_class = UserUpdateForm
+
+    def get_object(self, **kwargs):
+        user = self.request.user
+        return User.objects.get(pk=user.id)
 
 
 @login_required

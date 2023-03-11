@@ -30,7 +30,7 @@
                         <li class="nav-item"><a class="nav-link" href="/contacts">Контакты</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">|</a></li>
                         {% if request.user.is_authenticated %}
-                            <li class="nav-link">Привет, {{ request.user.username }}</li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'update_profile' %}">Привет, {{ request.user.username }}</a></li>
                             <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Войти</a></li>
