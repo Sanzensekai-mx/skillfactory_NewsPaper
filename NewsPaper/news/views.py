@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-
+from django.http import HttpResponseForbidden
 from django.views import View
 from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -39,7 +39,6 @@ class DetailPosts(DetailView):
         return context
 
 
-
 # class PostsSearch(ListView):
 #     model = Post
 #     template_name = 'news_search.html'
@@ -67,6 +66,7 @@ class DetailPosts(DetailView):
 #         return render(request, 'filter_post_news', context)
 #
 #     def post(self):
+
 
 def post_search(request):
     post_list = Post.objects.order_by('-create_time')
@@ -106,8 +106,6 @@ class CreatePostView(PermissionRequiredMixin, CreateView):
         context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
         return context
 
-
-
     # def post(self, request, *args, **kwargs):
     #     context = super().post(request, **kwargs)
     #     author = Author.objects.get(user=request.user)
@@ -129,6 +127,14 @@ class UpdatePostView(PermissionRequiredMixin, UpdateView):
     template_name = 'add_new.html'
     form_class = PostForm
 
+    def get(self, request, *args, **kwargs):
+        get = super().get(self, request, *args, **kwargs)
+        item = Post.objects.get(pk=self.kwargs.get('pk'))
+        author = Author.objects.get(user=request.user)
+        if not author == item.author and not author.user.is_superuser:
+            return HttpResponseForbidden(f'Нет доступа для редактирования постов автора {item.author.user.username}')
+        return get
+
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
@@ -141,11 +147,20 @@ class DeletePostView(PermissionRequiredMixin, DeleteView):
     queryset = Post.objects.all()
     success_url = '/news/'
 
-# TODO добавлять пользователя в объекты модели Author
+    def get(self, request, *args, **kwargs):
+        get = super().get(self, request, *args, **kwargs)
+        item = Post.objects.get(pk=self.kwargs.get('pk'))
+        author = Author.objects.get(user=request.user)
+        if not author == item.author and not author.user.is_superuser:
+            return HttpResponseForbidden(f'Нет доступа для удаления постов автора {item.author.user.username}')
+        return get
+
+
 @login_required
 def become_author(request):
     user = request.user
     author_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
+        Author.objects.create(user=user)
         author_group.user_set.add(user)
     return redirect('/news/')
